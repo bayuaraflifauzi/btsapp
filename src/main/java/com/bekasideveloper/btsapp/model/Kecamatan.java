@@ -14,7 +14,7 @@ public class Kecamatan {
     @Column(name = "NAMA_KECAMATAN")
     private String namaJenisBarang;
 
-    @OneToMany(mappedBy = "daftarCellBts")
+    @OneToMany(mappedBy = "kecamatan")
     public List<CellBts> daftarCellBts;
 
     public String getIdKecamatan() {
