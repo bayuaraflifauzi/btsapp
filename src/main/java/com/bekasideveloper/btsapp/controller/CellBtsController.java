@@ -73,6 +73,6 @@ public class CellBtsController {
         headers.add("content-disposition", "inline;filename=SURAT PERMOHONAN REKOMENDASI TITIK KOORDINAT MENARA TELEKOMUNIKASI");
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
-        return new ResponseEntity<>(file, headers, HttpStatus.OK);
+        return new ResponseEntity<Object>(file, headers, HttpStatus.OK);
     }
 }
