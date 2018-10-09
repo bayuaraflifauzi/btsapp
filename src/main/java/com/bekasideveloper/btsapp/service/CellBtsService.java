@@ -11,4 +11,5 @@ public interface CellBtsService {
     List<CellBts> getAllCellBtsByIdKecamatan(String idKecamatan);
 
     void createCellBts(CellBtsInputWrapper cellBtsInputWrapper);
+    void deleteCellBts(String kodeBts);
 }

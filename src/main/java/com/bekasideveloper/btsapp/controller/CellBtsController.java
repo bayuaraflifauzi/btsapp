@@ -4,6 +4,7 @@ import com.bekasideveloper.btsapp.model.CellBts;
 import com.bekasideveloper.btsapp.service.CellBtsService;
 import com.bekasideveloper.btsapp.wrapper.input.CellBtsInputWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CellBtsWrapper;
+import com.bekasideveloper.btsapp.wrapper.output.CustomMessage;
 import com.bekasideveloper.btsapp.wrapper.output.CustomerMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +56,12 @@ public class CellBtsController {
     ResponseEntity<?> createKecamatan(@RequestBody CellBtsInputWrapper cellBtsInputWrapper){
         cellBtsService.createCellBts(cellBtsInputWrapper);
         return new ResponseEntity<Object>(new CustomerMessage("create cell bts"), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete-bts/{kodeBts}", method = RequestMethod.DELETE)
+    ResponseEntity<?> deleteBts(@PathVariable("kodeBts") String kodeBts){
+        cellBtsService.deleteCellBts(kodeBts);
+        return new ResponseEntity<Object>(new CustomMessage("delete cell bts id = " + kodeBts), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-dokumen-permohonan", method = RequestMethod.GET)

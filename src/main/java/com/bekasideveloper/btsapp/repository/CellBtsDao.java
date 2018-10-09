@@ -18,4 +18,5 @@ public interface CellBtsDao extends JpaRepository<CellBts, CellBtsId> {
             "where kecamatan.idKecamatan = ?1")
     List<CellBts> findAllByIdKecamatan(String idKecamatan);
 
+    void deleteCellBtsByKodeCellBts(String kodeCellBts);
 }

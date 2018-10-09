@@ -9,9 +9,11 @@ import com.bekasideveloper.btsapp.wrapper.input.CellBtsInputWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service("CellBtsService")
+@Transactional
 public class CellBtsServiceImpl implements CellBtsService {
 
     @Autowired
@@ -46,5 +48,10 @@ public class CellBtsServiceImpl implements CellBtsService {
         cellBts.setKecamatan(kecamatan);
 
         cellBtsDao.save(cellBts);
+    }
+
+    @Override
+    public void deleteCellBts(String kodeCellBts){
+        cellBtsDao.deleteCellBtsByKodeCellBts(kodeCellBts);
     }
 }
