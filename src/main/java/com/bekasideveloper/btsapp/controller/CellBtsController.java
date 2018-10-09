@@ -5,6 +5,8 @@ import com.bekasideveloper.btsapp.service.CellBtsService;
 import com.bekasideveloper.btsapp.wrapper.input.CellBtsInputWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CellBtsWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CustomerMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(allowCredentials = "false")
 public class CellBtsController {
+    public static final Logger LOGGER = LoggerFactory.getLogger(CellBtsController.class);
 
     @Autowired
     private CellBtsService cellBtsService;
@@ -59,18 +62,22 @@ public class CellBtsController {
 
     @RequestMapping(value = "/get-dokumen-permohonan", method = RequestMethod.GET)
     private ResponseEntity<?> getDokumenPermohonan(){
+        LOGGER.info("get dokumen permohonan");
         byte[] file = null;
 
-        File filePath = new File("/home/pemkab/bts_app/SURAT\\ PERMOHONAN\\ REKOMENDASI\\ TITIK\\ KOORDINAT\\ MENARA\\ TELEKOMUNIKASI.docx");
+//        File filePath = new File("/home/pemkab/bts_app/SURAT\\ PERMOHONAN\\ REKOMENDASI\\ TITIK\\ KOORDINAT\\ MENARA\\ TELEKOMUNIKASI.docx");
+        File filePath = new File("/home/pemkab/bts_app/SURAT PERMOHONAN REKOMENDASI TITIK KOORDINAT MENARA TELEKOMUNIKASI.docx");
 
         try {
             file = Files.readAllBytes(filePath.toPath());
         } catch (IOException e){
+            LOGGER.error(e.toString());
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("aplication/vnd.openxmlformats-officedocument.wordprocessingml.document"));
-        headers.add("content-disposition", "inline;filename=SURAT PERMOHONAN REKOMENDASI TITIK KOORDINAT MENARA TELEKOMUNIKASI");
+//        headers.setContentType(MediaType.parseMediaType("aplication/vnd.openxmlformats-officedocument.wordprocessingml.document"));
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.add("content-disposition", "attachment;filename=SURAT PERMOHONAN REKOMENDASI TITIK KOORDINAT MENARA TELEKOMUNIKASI.docx");
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
         return new ResponseEntity<Object>(file, headers, HttpStatus.OK);
