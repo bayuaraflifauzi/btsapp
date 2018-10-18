@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class CellBtsController {
     private CellBtsService cellBtsService;
 
     @RequestMapping(value = "/cell-bts", method = RequestMethod.GET)
-    private ResponseEntity<?> getAllCellBts(){
+    public ResponseEntity<?> getAllCellBts(){
         List<CellBtsWrapper> cellBtsWrappers = new ArrayList<>();
         List<CellBts> cellBtses = cellBtsService.getAllCellBts();
         for (CellBts obj : cellBtses) {
@@ -43,7 +44,7 @@ public class CellBtsController {
     }
 
     @RequestMapping(value = "/cell-bts/{idKecamatan}", method = RequestMethod.GET)
-    private ResponseEntity<?> getKecamatanById(@PathVariable("idKecamatan") String idKecamatan){
+    public ResponseEntity<?> getKecamatanById(@PathVariable("idKecamatan") String idKecamatan){
         List<CellBtsWrapper> cellBtsWrappers = new ArrayList<>();
         List<CellBts> cellBtses = cellBtsService.getAllCellBtsByIdKecamatan(idKecamatan);
         for (CellBts obj : cellBtses) {
@@ -56,19 +57,21 @@ public class CellBtsController {
     }
 
     @RequestMapping(value = "/create-cell-bts", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> createKecamatan(@RequestBody CellBtsInputWrapper cellBtsInputWrapper){
         cellBtsService.createCellBts(cellBtsInputWrapper);
         return new ResponseEntity<Object>(new CustomerMessage("create cell bts"), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete-bts/{kodeBts}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> deleteBts(@PathVariable("kodeBts") String kodeBts){
         cellBtsService.deleteCellBts(kodeBts);
         return new ResponseEntity<Object>(new CustomMessage("delete cell bts id = " + kodeBts), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-dokumen-permohonan", method = RequestMethod.GET)
-    private ResponseEntity<?> getDokumenPermohonan(){
+    public ResponseEntity<?> getDokumenPermohonan(){
         LOGGER.info("get dokumen permohonan");
         byte[] file = null;
 
