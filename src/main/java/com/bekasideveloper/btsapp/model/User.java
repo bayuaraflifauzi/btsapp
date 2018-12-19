@@ -1,9 +1,7 @@
 package com.bekasideveloper.btsapp.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -15,6 +13,9 @@ public class User {
     private String password;
     @Column(name = "role")
     private Integer role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Perusahaan perusahaan;
 
     public String getUserId() {
         return userId;
