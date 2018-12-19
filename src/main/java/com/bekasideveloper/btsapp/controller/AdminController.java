@@ -50,6 +50,7 @@ public class AdminController {
     @PostMapping("/daftar-admin")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(0);
         userDao.save(user);
 
         return new ResponseEntity<>("success register user", HttpStatus.CREATED);

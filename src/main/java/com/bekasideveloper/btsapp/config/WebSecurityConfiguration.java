@@ -79,6 +79,7 @@ public class WebSecurityConfiguration
                     .antMatchers(HttpMethod.POST, "/login").permitAll()
                     .antMatchers(HttpMethod.POST, "/login-secure").permitAll()
                     .antMatchers(HttpMethod.POST, "/daftar-admin").permitAll()
+                    .antMatchers(HttpMethod.POST,"/register-user").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 // this disables session creation on Spring Security
