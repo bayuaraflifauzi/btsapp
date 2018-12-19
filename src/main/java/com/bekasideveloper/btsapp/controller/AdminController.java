@@ -3,9 +3,13 @@ package com.bekasideveloper.btsapp.controller;
 import com.bekasideveloper.btsapp.model.User;
 import com.bekasideveloper.btsapp.repository.UserDao;
 import com.bekasideveloper.btsapp.security.JWTTokenProvider;
+import com.bekasideveloper.btsapp.service.UserService;
+import com.bekasideveloper.btsapp.service.impl.UserDetailsServiceImpl;
 import com.bekasideveloper.btsapp.wrapper.input.LoginInputWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CustomMessage;
 import com.bekasideveloper.btsapp.wrapper.output.JWTAuthenticationResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +29,8 @@ public class AdminController {
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JWTTokenProvider tokenProvider;
+    @Autowired private UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody LoginInputWrapper loginInputWrapper){
@@ -37,9 +43,10 @@ public class AdminController {
 
     @RequestMapping(value = "/login-secure", method = RequestMethod.POST)
     public ResponseEntity<?> loginSecure(@RequestBody LoginInputWrapper loginInputWrapper){
+        User user = userService.getUser(loginInputWrapper.getUser());
         Authentication authentication
                 = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginInputWrapper.getUser(), loginInputWrapper.getPassword()));
+                new UsernamePasswordAuthenticationToken(user.getUserId(), loginInputWrapper.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

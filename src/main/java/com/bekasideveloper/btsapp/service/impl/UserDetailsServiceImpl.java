@@ -2,6 +2,9 @@ package com.bekasideveloper.btsapp.service.impl;
 
 import com.bekasideveloper.btsapp.model.User;
 import com.bekasideveloper.btsapp.repository.UserDao;
+import com.bekasideveloper.btsapp.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,15 +22,18 @@ import java.util.List;
 @Service("UserDetailsService")
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired private UserDao userDao;
+    @Autowired private UserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userDao.getOne(s);
+        User user = userService.getUser(s);
 
         List<GrantedAuthority> list = new ArrayList<>();
 
         if (user == null) {
+            logger.error("user not found in db");
             throw new UsernameNotFoundException(s);
         }
 

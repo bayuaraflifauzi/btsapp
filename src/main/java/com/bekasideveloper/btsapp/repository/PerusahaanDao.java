@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PerusahaanDao extends JpaRepository<Perusahaan, String> {
+    Perusahaan getByEmail(String email);
 }
