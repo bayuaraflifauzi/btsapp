@@ -86,22 +86,24 @@ public class AdminController {
         Map<String, Perusahaan> perusahaanMap = convertPerusahaanListToMap(userService.getAllPerusahaan());
 
         for (Pengajuan pengajuan : ajuanList) {
-            Perusahaan p = perusahaanMap.get(pengajuan.getPengajuanId().getUserId());
-            wrappers.add(new AjuanWrapper(
-                    p.getEmail(),
-                    p.getNpwpd(),
-                    p.getNamaPerusahaan(),
-                    p.getNamaPendaftar(),
-                    p.getAlamatPerusahaan(),
-                    p.getNoTelp(),
-                    String.valueOf(pengajuan.getPengajuanId().getIdPengajuan()),
-                    pengajuan.getIdKecamatan(),
-                    pengajuan.getKecamatan(),
-                    pengajuan.getLongitudeAjuan(),
-                    pengajuan.getLatitudeAjuan(),
-                    pengajuan.getPengajuanId().getIdPengajuan(),
-                    pengajuan.getStatus()
-            ));
+            if (pengajuan.getStatusAktif()==1) {
+                Perusahaan p = perusahaanMap.get(pengajuan.getPengajuanId().getUserId());
+                wrappers.add(new AjuanWrapper(
+                        p.getEmail(),
+                        p.getNpwpd(),
+                        p.getNamaPerusahaan(),
+                        p.getNamaPendaftar(),
+                        p.getAlamatPerusahaan(),
+                        p.getNoTelp(),
+                        String.valueOf(pengajuan.getPengajuanId().getIdPengajuan()),
+                        pengajuan.getIdKecamatan(),
+                        pengajuan.getKecamatan(),
+                        pengajuan.getLongitudeAjuan(),
+                        pengajuan.getLatitudeAjuan(),
+                        pengajuan.getPengajuanId().getIdPengajuan(),
+                        pengajuan.getStatus()
+                ));
+            }
         }
 
         return new ResponseEntity<>(wrappers, HttpStatus.OK);

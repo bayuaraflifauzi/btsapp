@@ -7,6 +7,7 @@ import com.bekasideveloper.btsapp.model.User;
 import com.bekasideveloper.btsapp.service.UserService;
 import com.bekasideveloper.btsapp.util.FileUploader;
 import com.bekasideveloper.btsapp.wrapper.input.AjuanUserWrapper;
+import com.bekasideveloper.btsapp.wrapper.input.UpdateStatusAjuanWrapper;
 import com.bekasideveloper.btsapp.wrapper.input.UserRegistrationWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CustomMessage;
 import com.bekasideveloper.btsapp.wrapper.output.HistoryAjuanWrapper;
@@ -98,6 +99,7 @@ public class UserController {
         //1 diterima
         //2 ditolak
         pengajuan.setStatus(0);
+        pengajuan.setStatusAktif(1);
         pengajuan.setScanNpwpdFile(ajuanId+"A."+ FilenameUtils.getExtension(wrapper.getNamaFileNPWPD()));
         pengajuan.setDokumenPengajuan(ajuanId+"B."+ FilenameUtils.getExtension(wrapper.getNamaDokumenAjuan()));
 
@@ -129,18 +131,33 @@ public class UserController {
             return new ResponseEntity<>(ajuanHistory, HttpStatus.OK);
         List<Pengajuan> pengajuanList = userService.getAjuanHistory(user.getUserId());
         for (Pengajuan p : pengajuanList) {
-            ajuanHistory.add(new HistoryAjuanWrapper(
-                    String.valueOf(p.getPengajuanId().getIdPengajuan()),
-                    p.getIdKecamatan(),
-                    p.getKecamatan(),
-                    p.getLongitudeAjuan(),
-                    p.getLatitudeAjuan(),
-                    p.getPengajuanId().getIdPengajuan(),
-                    p.getStatus()
-            ));
+            if (p.getStatusAktif() == 1)
+                ajuanHistory.add(new HistoryAjuanWrapper(
+                        String.valueOf(p.getPengajuanId().getIdPengajuan()),
+                        p.getIdKecamatan(),
+                        p.getKecamatan(),
+                        p.getLongitudeAjuan(),
+                        p.getLatitudeAjuan(),
+                        p.getPengajuanId().getIdPengajuan(),
+                        p.getStatus()
+                ));
         }
 
         return new ResponseEntity<>(ajuanHistory, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-ajuan/{ajuanId}")
+    public ResponseEntity<?> updateStatusAjuan(@PathVariable("ajuanId") String ajuanId) {
+        logger.info("update status ajuan");
+
+        Pengajuan p = userService.getAjuanById(ajuanId);
+        if (p==null)
+            return new ResponseEntity<>(new CustomMessage("data tidak ditemukan"), HttpStatus.INTERNAL_SERVER_ERROR);
+        p.setStatusAktif(0);
+
+        userService.createAjuan(p);
+
+        return new ResponseEntity<>(new CustomMessage("ajuan berhasil dihapus"), HttpStatus.OK);
     }
 
     @GetMapping("/get-file-npwpd/{idAjuan}")

@@ -22,6 +22,8 @@ public class Pengajuan {
     private String longitudeAjuan;
     @Column(name = "status")
     private Integer status;
+    @Column(name = "status_aktif")
+    private Integer statusAktif;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -54,6 +56,19 @@ public class Pengajuan {
         this.latitudeAjuan = latitudeAjuan;
         this.longitudeAjuan = longitudeAjuan;
         this.status = status;
+        this.user = user;
+    }
+
+    public Pengajuan(PengajuanId pengajuanId, String scanNpwpdFile, String dokumenPengajuan, String idKecamatan, String kecamatan, String latitudeAjuan, String longitudeAjuan, Integer status, Integer statusAktif, User user) {
+        this.pengajuanId = pengajuanId;
+        this.scanNpwpdFile = scanNpwpdFile;
+        this.dokumenPengajuan = dokumenPengajuan;
+        this.idKecamatan = idKecamatan;
+        this.kecamatan = kecamatan;
+        this.latitudeAjuan = latitudeAjuan;
+        this.longitudeAjuan = longitudeAjuan;
+        this.status = status;
+        this.statusAktif = statusAktif;
         this.user = user;
     }
 
@@ -127,5 +142,13 @@ public class Pengajuan {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getStatusAktif() {
+        return statusAktif;
+    }
+
+    public void setStatusAktif(Integer statusAktif) {
+        this.statusAktif = statusAktif;
     }
 }
