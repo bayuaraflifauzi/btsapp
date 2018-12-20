@@ -98,8 +98,8 @@ public class UserController {
         //1 diterima
         //2 ditolak
         pengajuan.setStatus(0);
-        pengajuan.setScanNpwpdFile(ajuanId+"."+ FilenameUtils.getExtension(wrapper.getNamaFileNPWPD()));
-        pengajuan.setDokumenPengajuan(ajuanId+"."+ FilenameUtils.getExtension(wrapper.getNamaDokumenAjuan()));
+        pengajuan.setScanNpwpdFile(ajuanId+"A."+ FilenameUtils.getExtension(wrapper.getNamaFileNPWPD()));
+        pengajuan.setDokumenPengajuan(ajuanId+"B."+ FilenameUtils.getExtension(wrapper.getNamaDokumenAjuan()));
 
         userService.createAjuan(pengajuan);
 
@@ -123,9 +123,11 @@ public class UserController {
     public ResponseEntity<?> getAjuanHistory(@PathVariable("idPengaju") String idPengaju) {
         logger.info("get ajuan history "+idPengaju);
 
-        User user = userService.getUser(idPengaju);
-        List<Pengajuan> pengajuanList = userService.getAjuanHistory(user.getUserId());
         List<HistoryAjuanWrapper> ajuanHistory = new ArrayList<>();
+        User user = userService.getUser(idPengaju);
+        if (user==null)
+            return new ResponseEntity<>(ajuanHistory, HttpStatus.OK);
+        List<Pengajuan> pengajuanList = userService.getAjuanHistory(user.getUserId());
         for (Pengajuan p : pengajuanList) {
             ajuanHistory.add(new HistoryAjuanWrapper(
                     String.valueOf(p.getPengajuanId().getIdPengajuan()),

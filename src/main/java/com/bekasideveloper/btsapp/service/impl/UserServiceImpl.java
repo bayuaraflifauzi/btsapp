@@ -45,7 +45,8 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findByUserId(userName);
         if (user==null) {
             Perusahaan p = perusahaanDao.getByEmail(userName);
-            user = userDao.getOne(p.getUserId());
+            if (p!=null)
+                user = userDao.getOne(p.getUserId());
         }
 
         return user;
