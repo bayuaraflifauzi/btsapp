@@ -58,7 +58,7 @@ public class AdminController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.generateToken(authentication);
+        String jwt = String.valueOf(user.getRole())+" "+tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JWTAuthenticationResponse(jwt));
     }
 
@@ -109,7 +109,7 @@ public class AdminController {
         return new ResponseEntity<>(wrappers, HttpStatus.OK);
     }
 
-    @PutMapping("/update-status-ajuan")
+    @PostMapping("/update-status-ajuan")
     public ResponseEntity<?> updateStatusAjuan(@RequestBody UpdateStatusAjuanWrapper wrapper) {
         logger.info("update status ajuan");
 

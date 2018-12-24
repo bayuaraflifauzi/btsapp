@@ -80,8 +80,11 @@ public class WebSecurityConfiguration
                     .antMatchers(HttpMethod.POST, "/login-secure").permitAll()
                     .antMatchers(HttpMethod.POST, "/daftar-admin").permitAll()
                     .antMatchers(HttpMethod.POST,"/register-user").permitAll()
-                    .anyRequest().permitAll()
-//                .anyRequest().authenticated()
+                    .antMatchers(HttpMethod.GET, "/get-detail-perusahaan/{userName}").authenticated()
+//                .anyRequest().permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
                 .and()
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

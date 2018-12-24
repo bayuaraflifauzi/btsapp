@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +66,7 @@ public class UserController {
     }
 
     @GetMapping("/get-detail-perusahaan/{userName}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getDetailPerusahaan(@PathVariable("userName") String userName) {
         logger.info("get detail perusahaan "+userName);
 
@@ -84,6 +86,7 @@ public class UserController {
     }
 
     @PostMapping("/create-ajuan")
+    @PreAuthorize("hasRole('USER')")
     public  ResponseEntity<?> createAjuan(@RequestBody AjuanUserWrapper wrapper) {
         logger.info("create ajuan");
         User pengaju = userService.getUser(wrapper.getUserId());
@@ -109,6 +112,7 @@ public class UserController {
     }
 
     @PostMapping("/create-ajuan-file")
+    @PreAuthorize("hasRole('USER')")
     public  ResponseEntity<?> createAjuanFile(
             @RequestParam("file_npwpd") MultipartFile fileNPWPD,
             @RequestParam("file_dokumen_ajuan") MultipartFile fileDokumenAjuan) {
@@ -122,6 +126,7 @@ public class UserController {
     }
 
     @GetMapping("/get-ajuan-history/{idPengaju}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getAjuanHistory(@PathVariable("idPengaju") String idPengaju) {
         logger.info("get ajuan history "+idPengaju);
 
