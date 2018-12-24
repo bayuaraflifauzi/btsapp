@@ -66,7 +66,8 @@ public class WebSecurityConfiguration
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and().csrf().disable()
+                .cors().and().csrf()
+                .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
                 .and()
@@ -83,6 +84,8 @@ public class WebSecurityConfiguration
                     .antMatchers(HttpMethod.GET, "/get-detail-perusahaan/{userName}").authenticated()
 //                .anyRequest().permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .httpBasic()
                 .and()
                 .httpBasic()
                 .and()

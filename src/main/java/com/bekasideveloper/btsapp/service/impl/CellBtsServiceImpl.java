@@ -51,6 +51,12 @@ public class CellBtsServiceImpl implements CellBtsService {
     }
 
     @Override
+    public void createCellBts(List<CellBts> cellBtsList) {
+        for (CellBts cellBts : cellBtsList)
+            cellBtsDao.save(cellBts);
+    }
+
+    @Override
     public void deleteCellBts(String kodeCellBts){
         cellBtsDao.deleteCellBtsByKodeCellBts(kodeCellBts);
     }
