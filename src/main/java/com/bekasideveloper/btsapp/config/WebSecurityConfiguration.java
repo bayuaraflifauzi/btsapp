@@ -66,7 +66,8 @@ public class WebSecurityConfiguration
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and().csrf().disable()
+                .cors().and().csrf()
+                .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
                 .and()
@@ -82,6 +83,8 @@ public class WebSecurityConfiguration
                     .antMatchers(HttpMethod.POST,"/register-user").permitAll()
                     .anyRequest().permitAll()
 //                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
                 .and()
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

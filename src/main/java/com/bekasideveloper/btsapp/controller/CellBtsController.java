@@ -1,14 +1,19 @@
 package com.bekasideveloper.btsapp.controller;
 
 import com.bekasideveloper.btsapp.model.CellBts;
+import com.bekasideveloper.btsapp.model.CellBtsId;
+import com.bekasideveloper.btsapp.model.Kecamatan;
 import com.bekasideveloper.btsapp.service.CellBtsService;
 import com.bekasideveloper.btsapp.wrapper.input.CellBtsInputWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CellBtsWrapper;
 import com.bekasideveloper.btsapp.wrapper.output.CustomMessage;
 import com.bekasideveloper.btsapp.wrapper.output.CustomerMessage;
+import javafx.scene.control.Cell;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,8 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,5 +96,50 @@ public class CellBtsController {
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
         return new ResponseEntity<Object>(file, headers, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/import-data-cell")
+    ResponseEntity<?> importDataCell() {
+        LOGGER.info("import data cell");
+        InputStream in = getClass().getResourceAsStream("/tb_zona.csv");
+        ;
+        BufferedReader br = null;
+        String line = "";
+        String cvsSplitBy = ",";
+
+        try {
+            br = new BufferedReader(new InputStreamReader(in));
+            List<CellBts> cellBtsList = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                // use comma as separator
+                String[] cell = line.split(cvsSplitBy);
+                LOGGER.info("lat: " + cell[0] + "; long: " + cell[1] + " id: "+cell[2] + "; kec: "+cell[2].substring(0,4)+"; radius: "+cell[3].replace("\"",""));
+
+                CellBts cellBts = new CellBts();
+                cellBts.setKodeCellBts(cell[2].replace("\"",""));
+                cellBts.setRadiusCellBts(Integer.parseInt(cell[3].replace("\"","")));
+                CellBtsId cellBtsId = new CellBtsId();
+                cellBtsId.setLatCellBts(cell[0].replace("\"",""));
+                cellBtsId.setLongCellBts(cell[1].replace("\"",""));
+                cellBts.setCellBtsId(cellBtsId);
+
+                Kecamatan kecamatan = new Kecamatan();
+
+                kecamatan.setIdKecamatan(cell[2].substring(0,4).replace("\"",""));
+                cellBts.setKecamatan(kecamatan);
+                cellBtsList.add(cellBts);
+            }
+
+            cellBtsService.createCellBts(cellBtsList);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomMessage("file import tidak ditemukan"), HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new CustomMessage("gagal mengakses file"), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new CustomMessage("Import data selesai"), HttpStatus.OK);
     }
 }
